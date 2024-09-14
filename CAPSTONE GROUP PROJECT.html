@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanical Engineering Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://media.istockphoto.com/id/1498878143/photo/book-stack-and-open-book-on-the-desk-in-modern-public-library.webp?b=1&s=170667a&w=0&k=20&c=T63zJBKuZLTUQwwAAwLzbMwtzAEdd4wZRaEV6EAdUnA=');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(23, 23, 23, 0.7);
+            border-radius: 8px;
+            position: relative;
+        }
+        .heading {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3.5em;
+            color: #2c6cb6;
+            text-shadow: 2px 2px 4px rgba(300, 300, 300, 0.8);
+            font-style: italic;
+            border-bottom: 3px solid #000000;
+        }
+        .form-container, .subject-container, .textbook-container {
+            background-color: transparent;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(117, 113, 113, 0.2);
+            text-align: center;
+            width: 300px;
+            position: absolute;
+        }
+        .form-container.hidden, .subject-container.hidden, .textbook-container.hidden {
+            display: none;
+        }
+        .form-container input, .form-container button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 2.5px solid #4f69db;
+            border-radius: 4px;
+        }
+        .form-container input {
+            border-color: #ffffff;
+        }
+        .form-container button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: not-allowed;
+        }
+        .form-container button.enabled {
+            cursor: pointer;
+        }
+        .form-container button:hover.enabled {
+            background-color: #0056b3;
+        }
+        .form-container h2 {
+            color: #c2d9ef;
+            
+        }
+        .error {
+            color: #dc3545;
+        }
+        .subject-list, .book-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .subject-list li, .book-list li {
+            padding: 10px;
+            border-bottom: 0.5px solid #0056b3;
+        }
+        .subject-list a {
+            text-decoration: none;
+            color: #ffffff;
+            font-weight: bolder;
+        }
+        .subject-list a:hover {
+            color: #0056b3;
+        }
+        .subject-container h2 {
+            color: #c2d9ef;
+            padding-top: 90px;
+            border-bottom: 4px solid #0056b3;
+        }
+        .textbook-container h2 {
+            color: #b9bec4;
+        }
+        .textbook-container #textbook-content {
+            color: #333;
+        }
+        .logout-btn, .back-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .logout-btn {
+            background-color:#b71b2a;
+            color: white;
+        }
+        .logout-btn:hover {
+            background-color: #9e343e;
+        }
+        .back-btn {
+            background-color:#0056b3;
+            color: white;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Heading -->
+        <div class="heading">SMART LIBRARY</div>
+
+        <!-- Login Form Container -->
+        <div class="form-container" id="login-container">
+            <h2>Log-in </h2>
+            <input type="text" id="login-username" placeholder="Username" oninput="validateLoginForm()">
+            <input type="password" id="login-password" placeholder="Password" oninput="validateLoginForm()">
+            <button id="login-btn" class="disabled" onclick="login()">Login</button>
+            <p class="error" id="login-error-message"></p>
+            <p>
+                Don't have an account? <a href="#" onclick="showSignUpForm()">Sign Up</a>
+            </p>
+        </div>
+
+        <!-- Sign-Up Form Container -->
+        <div class="form-container hidden" id="signup-container">
+            <h2>Sign Up</h2>
+            <input type="text" id="signup-username" placeholder="Username" oninput="validateSignUpForm()">
+            <input type="password" id="signup-password" placeholder="Password" oninput="validateSignUpForm()">
+            <input type="text" id="phone" placeholder="Phone Number" oninput="validateSignUpForm()">
+            <button id="signup-btn" class="disabled" onclick="signUp()">Sign Up</button>
+            <p class="error" id="signup-error-message"></p>
+            <p>
+                Already have an account? <a href="#" onclick="showLoginForm()">Login</a>
+            </p>
+        </div>
+
+        <!-- Subject Selection Container -->
+        <div class="subject-container hidden" id="subject-container">
+            <h2>Select a Subject</h2>
+            <ul class="subject-list">
+                <li><a href="#" onclick="showTextbook('Advanced Solid Modelling')">Advanced Solid Modelling</a></li>
+                <li><a href="#" onclick="showTextbook('Manufacturing')">Manufacturing Processes</a></li>
+                <li><a href="#" onclick="showTextbook('Applied Thermodynamics')">Applied Thermodynamics</a></li>
+                <li><a href="#" onclick="showTextbook('Theory of Machines')">Kinematics of Machines</a></li>
+                <li><a href="#" onclick="showTextbook('Dynamics')">Dynamics of Machinery</a></li>
+                <li><a href="#" onclick="showTextbook('Engineering Mechanics')">Engineering Mechanics</a></li>
+                <li><a href="#" onclick="showTextbook('Mechanics of Solids')">Mechanics of Solids</a></li>
+                <li><a href="#" onclick="showTextbook('Thermodynamics')">Thermodynamics</a></li>
+                <li><a href="#" onclick="showTextbook('FluidMechanics')">Fluid Mechanics</a></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()">Back</button>
+        </div>
+
+        <!-- Textbook Container -->
+        <div class="textbook-container hidden" id="textbook-container">
+            <h2 id="textbook-title">Textbook</h2>
+            <div id="textbook-content">Loading textbook content...</div>
+            <button class="back-btn" onclick="showSubjects()">Back to Subjects</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // On page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('loggedIn') === 'true') {
+                showSubjects();
+            } else {
+                showLoginForm();
+            }
+        });
+
+        // Show login form
+        function showLoginForm() {
+            document.getElementById('login-container').classList.remove('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('subject-container').classList.add('hidden');
+            document.getElementById('textbook-container').classList.add('hidden');
+        }
+
+        // Show sign-up form
+        function showSignUpForm() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.remove('hidden');
+            document.getElementById('subject-container').classList.add('hidden');
+            document.getElementById('textbook-container').classList.add('hidden');
+        }
+
+        // Show subjects
+        function showSubjects() {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('subject-container').classList.remove('hidden');
+            document.getElementById('textbook-container').classList.add('hidden');
+        }
+
+        // Show textbook for selected subject
+        function showTextbook(subject) {
+            document.getElementById('login-container').classList.add('hidden');
+            document.getElementById('signup-container').classList.add('hidden');
+            document.getElementById('subject-container').classList.add('hidden');
+            document.getElementById('textbook-container').classList.remove('hidden');
+            
+            const textbookContent = document.getElementById('textbook-content');
+            const textbookTitle = document.getElementById('textbook-title');
+            
+            textbookTitle.innerText = subject;
+            
+            // Updated links for "Mechanics of Solids"
+            if (subject === 'Mechanics of Solids') {
+                textbookContent.innerHTML = `
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Strength_of_Materials/FqEbEAAAQBAJ?hl=en&gbpv=1&pg=PR1&printsec=frontcover" target="_blank">View R.S.KHURMI Textbook </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Strength_of_Materials/3u3sDwAAQBAJ?hl=en&gbpv=1&pg=PR1&printsec=frontcover" target="_blank">View R.K.RAJPUT Textbook </a>
+                `;
+            } else if (subject === 'Theory of Machines') {
+                textbookContent.innerHTML = `
+                    <a href="https://books.google.co.in/books?id=NgsbEAAAQBAJ&lpg=PR1&pg=PR2#v=onepage&q&f=false" target="_blank">View R.S.KHURMI - text book </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Text_Book_of_Theory_of_Machines/hVeaAL0j3T0C?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.BANSAL - text book</a>
+                `;
+            } else if (subject === 'Thermodynamics') {
+                textbookContent.innerHTML = `
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Engineering_Thermodynamics/WhrezCOLYmwC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.RAJPUT - text book </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Thermal_Engineering/ia_TpdIDBUQC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.S.KHURMI - text book</a>
+                `;
+            } else if (subject === 'Engineering Mechanics') {
+                textbookContent.innerHTML = `
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Engineering_Thermodynamics/WhrezCOLYmwC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.RAJPUT - text book </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Engineering_Mechanics/AOY9fiIkB9AC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.BANSAL - text book</a>
+                `;
+            }else if (subject === 'FluidMechanics') {
+                textbookContent.innerHTML = `
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Fluid_Mechanics_LPSPE/ly8cEAAAQBAJ?hl=en&gbpv=1&pg=PR3&printsec=frontcover" target="_blank">View R.K.RAJPUT - text book </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Textbook_of_Fluid_Mechanics/FzQz6A6SnyoC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.BANSAL - text book</a>
+                `;
+            }else if (subject === 'Applied Thermodynamics') {
+                textbookContent.innerHTML = `
+                    <a href="https://www.google.co.in/books/edition/Applied_Thermodynamics/Y-foxWJixrIC?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.RAJPUT - text book </a><br>
+                `;
+            }else if (subject === 'Manufacturing') {
+                textbookContent.innerHTML = `
+                    <a href="https://books.google.com.bd/books?id=6wFuw6wufTMC&lpg=PP1&pg=PP1#v=onepage&q&f=false" target="_blank">View R.K.RAJPUT - text book </a><br>
+                `;
+            }else if (subject === 'Advanced Solid Modelling') {
+                textbookContent.innerHTML = `
+                    <a href="https://static.sdcpublications.com/pdfsample/1-58503-314-6-2.pdf" target="_blank">View WORKBOOK - text book </a><br>
+                    <a href="http://www.staff.city.ac.uk/~ra600/Presentations/CATIA%20V5%20Lectures.pdf" target="_blank">View LECTURES - text book</a>
+                `;
+            }else if (subject === 'Dynamics') {
+                textbookContent.innerHTML = `
+                    <a href="https://books.google.co.in/books?id=NgsbEAAAQBAJ&lpg=PR1&pg=PR2#v=onepage&q&f=false" target="_blank">View R.S.KHURMI - text book </a><br>
+                    <a href="https://www.google.co.in/books/edition/A_Text_Book_of_Theory_of_Machines/hVeaAL0j3T0C?hl=en&gbpv=1&pg=PP1&printsec=frontcover" target="_blank">View R.K.BANSAL - text book</a>
+                `;
+            } else {
+                textbookContent.innerText = `Content for ${subject} will be displayed here.`;
+            }
+        }
+
+        // Handle login
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+
+            if (username && password) {
+                if (users[username] === password) {
+                    localStorage.setItem('loggedIn', 'true');
+                    showSubjects();
+                } else {
+                    document.getElementById('login-error-message').innerText = 'Invalid username or password';
+                }
+            } else {
+                document.getElementById('login-error-message').innerText = 'Please enter both username and password';
+            }
+        }
+
+        // Handle sign-up
+        function signUp() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const phone = document.getElementById('phone').value;
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+
+            if (username && password && phone) {
+                if (!users[username]) {
+                    users[username] = password;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    showLoginForm();
+                } else {
+                    document.getElementById('signup-error-message').innerText = 'Username already exists';
+                }
+            } else {
+                document.getElementById('signup-error-message').innerText = 'Please fill out all fields';
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('loggedIn');
+            showLoginForm();
+        }
+
+        // Enable or disable login button
+        function validateLoginForm() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const loginBtn = document.getElementById('login-btn');
+            if (username && password) {
+                loginBtn.classList.add('enabled');
+                loginBtn.classList.remove('disabled');
+            } else {
+                loginBtn.classList.add('disabled');
+                loginBtn.classList.remove('enabled');
+            }
+        }
+
+        // Enable or disable sign-up button
+        function validateSignUpForm() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            const phone = document.getElementById('phone').value;
+            const signupBtn = document.getElementById('signup-btn');
+            if (username && password && phone) {
+                signupBtn.classList.add('enabled');
+                signupBtn.classList.remove('disabled');
+            } else {
+                signupBtn.classList.add('disabled');
+                signupBtn.classList.remove('enabled');
+            }
+        }
+    </script>
+</body>
+</html>
